@@ -74,7 +74,7 @@ export function createApp(overrides: Partial<AppDependencies> = {}) {
 
       let deliveries: DeliveryRecord[] = [];
 
-      if (decision.action === 'ROUTE' && !decision.rateLimited) {
+      if (decision.action === 'ROUTE') {
         try {
           deliveries = await router.route(normalizedEvent, decision.targets);
         } catch (error) {
