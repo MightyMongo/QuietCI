@@ -8,6 +8,6 @@ import { AuditStore } from '../persistence/auditStore';
 const config = loadRuntimeConfig();
 loadRulesConfig(config.rulesPath);
 loadTargetsConfig(config.targetsPath);
-new AuditStore(config.databasePath);
+AuditStore.initializeDatabase(config.databasePath);
 
 console.log(`QuietCI database initialized at ${config.databasePath}`);

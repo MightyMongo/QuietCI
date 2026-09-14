@@ -9,14 +9,47 @@ import { normalizeWebhookEvent } from './normalizers';
 import { AuditStore } from './persistence/auditStore';
 import { NotificationRouter } from './routing/router';
 import { DeliveryRecord } from './routing/types';
-import { createSummarizerAdapter } from './summarizer/summarizerAdapter';
-export function createApp() {
-  const config = loadRuntimeConfig();
-  const auditStore = new AuditStore(config.databasePath);
-  const filterEngine = new FilterEngine(loadRulesConfig(config.rulesPath));
-  const targets = loadTargetsConfig(config.targetsPath);
-  const router = new NotificationRouter(targets);
-  const summarizer = createSummarizerAdapter(config.aiApiKeys);
+import {
+  createSummarizerAdapter,
+  SummarizerAdapter
+} from './summarizer/summarizerAdapter';
+
+interface AppDependencies {
+  auditStore: AuditStore;
+  filterEngine: FilterEngine;
+  router: NotificationRouter;
+  summarizer: SummarizerAdapter;
+}
+
+export function createApp(overrides: Partial<AppDependencies> = {}) {
+  const config =
+    overrides.auditStore &&
+    overrides.filterEngine &&
+    overrides.router &&
+    overrides.summarizer
+      ? undefined
+      : loadRuntimeConfig();
+
+  const auditStore =
+    overrides.auditStore ??
+    (() => {
+      const runtimeConfig = config ?? loadRuntimeConfig();
+      AuditStore.initializeDatabase(runtimeConfig.databasePath);
+      return new AuditStore(runtimeConfig.databasePath);
+    })();
+  const filterEngine =
+    overrides.filterEngine ??
+    new FilterEngine(
+      loadRulesConfig((config ?? loadRuntimeConfig()).rulesPath)
+    );
+  const router =
+    overrides.router ??
+    new NotificationRouter(
+      loadTargetsConfig((config ?? loadRuntimeConfig()).targetsPath)
+    );
+  const summarizer =
+    overrides.summarizer ??
+    createSummarizerAdapter((config ?? loadRuntimeConfig()).aiApiKeys);
   const app = express();
 
   app.use(express.json({ limit: '1mb' }));
@@ -57,9 +90,10 @@ export function createApp() {
             }
           ];
         }
-        if (deliveries.length > 0) {
-          auditStore.recordDeliveries(eventId, deliveries);
-        }
+      }
+
+      if (deliveries.length > 0) {
+        auditStore.recordDeliveries(eventId, deliveries);
       }
 
       response.status(202).json({

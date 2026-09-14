@@ -8,16 +8,7 @@ export class AuditStore {
   private readonly database: DatabaseSync;
 
   constructor(databasePath: string) {
-    fs.mkdirSync(path.dirname(databasePath), { recursive: true });
     this.database = new DatabaseSync(databasePath);
-    this.database.exec('BEGIN IMMEDIATE');
-    try {
-      this.database.exec(fs.readFileSync(this.resolveMigrationPath(), 'utf8'));
-      this.database.exec('COMMIT');
-    } catch (error) {
-      this.database.exec('ROLLBACK');
-      throw error;
-    }
   }
 
   recordEvent(event: UnifiedEvent): number {
@@ -75,7 +66,18 @@ export class AuditStore {
     }
   }
 
-  private resolveMigrationPath(): string {
+  static initializeDatabase(databasePath: string): void {
+    fs.mkdirSync(path.dirname(databasePath), { recursive: true });
+    const database = new DatabaseSync(databasePath);
+
+    try {
+      database.exec(fs.readFileSync(AuditStore.resolveMigrationPath(), 'utf8'));
+    } finally {
+      database.close();
+    }
+  }
+
+  private static resolveMigrationPath(): string {
     const candidates = [
       path.resolve(__dirname, '../migrations/001_init.sql'),
       path.resolve(process.cwd(), 'migrations/001_init.sql')

@@ -122,6 +122,7 @@ Unit tests cover:
 
 - Payload normalization
 - Filter engine routing, snoozing, and rate limiting behavior
+- Notification routing and sender edge cases
 
 ## License
 
