@@ -97,7 +97,7 @@ export class FilterEngine {
       return false;
     }
 
-    const key = `${ruleName}:${event.repo}:${event.branch}:${event.event_type}`;
+    const key = `${ruleName}:${event.repo}:${event.branch}:${event.actor}:${event.event_type}`;
     const now = Date.now();
     const windowStart = now - rateLimit.window_seconds * 1000;
     const timestamps = (this.rateLimits.get(key) ?? []).filter(

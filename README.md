@@ -91,6 +91,7 @@ QuietCI detects the source from headers or payload shape, normalizes the event, 
 
 ```bash
 npm install
+# ensure config/rules.yaml and config/targets.yaml exist
 npm run db:setup
 npm run dev
 ```
