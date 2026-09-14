@@ -5,15 +5,18 @@ import { DeliveryRecord } from '../routing/types';
 import { FilterDecision, UnifiedEvent } from '../types/events';
 
 export class AuditStore {
-  private static readonly initializedPaths = new Set<string>();
   private readonly database: DatabaseSync;
 
   constructor(databasePath: string) {
     fs.mkdirSync(path.dirname(databasePath), { recursive: true });
     this.database = new DatabaseSync(databasePath);
-    if (!AuditStore.initializedPaths.has(databasePath)) {
+    this.database.exec('BEGIN IMMEDIATE');
+    try {
       this.database.exec(fs.readFileSync(this.resolveMigrationPath(), 'utf8'));
-      AuditStore.initializedPaths.add(databasePath);
+      this.database.exec('COMMIT');
+    } catch (error) {
+      this.database.exec('ROLLBACK');
+      throw error;
     }
   }
 

@@ -78,7 +78,10 @@ export function resolveTargetEnv(
     ? env[target.smtpPortEnv]
     : undefined;
   const parsedSmtpPort =
-    smtpPortValue && /^\d+$/.test(smtpPortValue)
+    smtpPortValue &&
+    /^\d+$/.test(smtpPortValue) &&
+    Number(smtpPortValue) >= 1 &&
+    Number(smtpPortValue) <= 65535
       ? Number(smtpPortValue)
       : undefined;
 
