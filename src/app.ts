@@ -9,20 +9,6 @@ import { normalizeWebhookEvent } from './normalizers';
 import { AuditStore } from './persistence/auditStore';
 import { NotificationRouter } from './routing/router';
 import { createSummarizerAdapter } from './summarizer/summarizerAdapter';
-import { UnifiedEvent } from './types/events';
-
-function toResponseEvent(event: UnifiedEvent) {
-  return {
-    source: event.source,
-    repo: event.repo,
-    branch: event.branch,
-    actor: event.actor,
-    event_type: event.event_type,
-    timestamp: event.timestamp,
-    message: event.message
-  };
-}
-
 export function createApp() {
   const config = loadRuntimeConfig();
   const auditStore = new AuditStore(config.databasePath);
@@ -63,10 +49,12 @@ export function createApp() {
 
       response.status(202).json({
         eventId,
-        event: toResponseEvent(normalizedEvent),
-        decision,
-        summary,
-        deliveries
+        accepted: true,
+        source: normalizedEvent.source,
+        repo: normalizedEvent.repo,
+        event_type: normalizedEvent.event_type,
+        timestamp: normalizedEvent.timestamp,
+        summaryGenerated: Boolean(summary)
       });
     } catch (error) {
       next(error);

@@ -1,6 +1,14 @@
 import { UnifiedEvent } from '../types/events';
 import { DeliveryRecord, NotificationSender, TargetConfig } from './types';
 
+function sanitizeSlackText(value: string): string {
+  return value.replace(/[<>&]/g, (char) => {
+    if (char === '<') return '&lt;';
+    if (char === '>') return '&gt;';
+    return '&amp;';
+  });
+}
+
 export class SlackSender implements NotificationSender {
   async send(
     targetName: string,
@@ -21,7 +29,9 @@ export class SlackSender implements NotificationSender {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({
-          text: `[${event.source}] ${event.repo} ${event.branch}: ${event.message}`
+          text: sanitizeSlackText(
+            `[${event.source}] ${event.repo} ${event.branch}: ${event.message}`
+          )
         })
       });
 

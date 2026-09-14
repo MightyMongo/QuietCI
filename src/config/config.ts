@@ -17,6 +17,9 @@ function readStructuredFile<T>(filePath: string): T {
   if (filePath.endsWith('.json')) {
     return JSON.parse(fileContents) as T;
   }
+  if (!filePath.endsWith('.yaml') && !filePath.endsWith('.yml')) {
+    throw new Error(`Unsupported config format for ${filePath}`);
+  }
 
   return YAML.parse(fileContents) as T;
 }
