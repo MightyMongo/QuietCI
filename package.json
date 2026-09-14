@@ -4,7 +4,7 @@
   "description": "QuietCI is a self-hosted CI/CD notification optimizer. It reduces noisy build and deployment alerts by filtering irrelevant events, prioritizing critical signals, and routing clean notifications to Slack, Microsoft Teams, or email. QuietCI unifies GitHub Actions, GitLab CI/CD, Jenkins, CircleCI, and Azure DevOps into a single configurable workflow.",
   "main": "dist/index.js",
   "scripts": {
-    "build": "rm -rf dist && tsc -p tsconfig.json && mkdir -p dist/migrations && cp migrations/*.sql dist/migrations/",
+    "build": "node -e \"const fs=require('node:fs'); fs.rmSync('dist',{recursive:true,force:true});\" && tsc -p tsconfig.json && node -e \"const fs=require('node:fs'); fs.mkdirSync('dist/migrations',{recursive:true}); for (const file of fs.readdirSync('migrations')) { if (file.endsWith('.sql')) fs.cpSync('migrations/' + file, 'dist/migrations/' + file); }\"",
     "db:setup": "tsx src/scripts/setupDb.ts",
     "dev": "tsx watch src/index.ts",
     "format": "prettier --check .",

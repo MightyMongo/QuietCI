@@ -48,7 +48,19 @@ export class NotificationRouter {
         continue;
       }
 
-      deliveries.push(await sender.send(targetName, resolvedTarget, event));
+      try {
+        deliveries.push(await sender.send(targetName, resolvedTarget, event));
+      } catch (error) {
+        deliveries.push({
+          targetName,
+          channel: target.channel,
+          status: 'failed',
+          details:
+            error instanceof Error
+              ? error.message
+              : `Unknown ${target.channel} delivery failure`
+        });
+      }
     }
 
     return deliveries;

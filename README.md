@@ -72,8 +72,8 @@ Secrets and runtime settings are read from environment variables such as:
 
 QuietCI reads configuration directly from process environment variables. For
 local `npm run dev` usage, export them in your shell before starting the app.
-For Docker Compose, you can create a `.env` file from `.env.example` so Compose
-injects the same values into the container.
+For Docker Compose only, you can create a `.env` file from `.env.example` so
+Compose injects the same values into the container.
 
 ## Webhook Setup
 
