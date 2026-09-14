@@ -2,11 +2,18 @@ import { UnifiedEvent } from '../types/events';
 import { DeliveryRecord, NotificationSender, TargetConfig } from './types';
 
 function sanitizeTeamsText(value: string): string {
-  return value.replace(/[<>&]/g, (char) => {
+  return value.replace(/[<>]/g, (char) => {
     if (char === '<') return '&lt;';
-    if (char === '>') return '&gt;';
-    return '&amp;';
+    return '&gt;';
   });
+}
+
+function isHttpsUrl(value: string): boolean {
+  try {
+    return new URL(value).protocol === 'https:';
+  } catch {
+    return false;
+  }
 }
 
 export class TeamsSender implements NotificationSender {
@@ -21,6 +28,14 @@ export class TeamsSender implements NotificationSender {
         channel: 'teams',
         status: 'skipped',
         details: 'TEAMS_WEBHOOK_URL is not configured'
+      };
+    }
+    if (!isHttpsUrl(target.resolvedWebhookUrl)) {
+      return {
+        targetName,
+        channel: 'teams',
+        status: 'failed',
+        details: 'Teams webhook URL must use HTTPS'
       };
     }
 

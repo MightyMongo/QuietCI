@@ -13,15 +13,21 @@ export interface RuntimeConfig {
 }
 
 function readStructuredFile<T>(filePath: string): T {
-  const fileContents = fs.readFileSync(filePath, 'utf8');
-  if (filePath.endsWith('.json')) {
-    return JSON.parse(fileContents) as T;
-  }
-  if (!filePath.endsWith('.yaml') && !filePath.endsWith('.yml')) {
-    throw new Error(`Unsupported config format for ${filePath}`);
-  }
+  try {
+    const fileContents = fs.readFileSync(filePath, 'utf8');
+    if (filePath.endsWith('.json')) {
+      return JSON.parse(fileContents) as T;
+    }
+    if (!filePath.endsWith('.yaml') && !filePath.endsWith('.yml')) {
+      throw new Error(`Unsupported config format for ${filePath}`);
+    }
 
-  return YAML.parse(fileContents) as T;
+    return YAML.parse(fileContents) as T;
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : 'Unknown config error';
+    throw new Error(`Failed to load config ${filePath}: ${message}`);
+  }
 }
 
 export function loadRuntimeConfig(

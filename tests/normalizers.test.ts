@@ -230,6 +230,39 @@ test('falls back to the current time for invalid timestamps', () => {
   assert.ok(parsed <= after);
 });
 
+test('falls back to the current time for empty timestamps', () => {
+  const before = Date.now();
+  const timestamp = toIsoTimestamp('');
+  const after = Date.now();
+  const parsed = Date.parse(timestamp);
+
+  assert.ok(!Number.isNaN(parsed));
+  assert.ok(parsed >= before);
+  assert.ok(parsed <= after);
+});
+
+test('falls back to the current time for undefined timestamps', () => {
+  const before = Date.now();
+  const timestamp = toIsoTimestamp(undefined);
+  const after = Date.now();
+  const parsed = Date.parse(timestamp);
+
+  assert.ok(!Number.isNaN(parsed));
+  assert.ok(parsed >= before);
+  assert.ok(parsed <= after);
+});
+
+test('falls back to the current time for null timestamps', () => {
+  const before = Date.now();
+  const timestamp = toIsoTimestamp(null);
+  const after = Date.now();
+  const parsed = Date.parse(timestamp);
+
+  assert.ok(!Number.isNaN(parsed));
+  assert.ok(parsed >= before);
+  assert.ok(parsed <= after);
+});
+
 test('falls back to the current time when normalizing malformed timestamps', () => {
   const payload = readPayload('github-actions');
   payload.workflow_run = {

@@ -57,10 +57,9 @@ export function createApp() {
             }
           ];
         }
-      }
-
-      if (deliveries.length > 0) {
-        auditStore.recordDeliveries(eventId, deliveries);
+        if (deliveries.length > 0) {
+          auditStore.recordDeliveries(eventId, deliveries);
+        }
       }
 
       response.status(202).json({
@@ -84,7 +83,15 @@ export function createApp() {
       response: Response,
       _next: NextFunction
     ) => {
-      response.status(400).json({
+      const maybeStatus = (error as Error & { status?: unknown }).status;
+      const status =
+        typeof maybeStatus === 'number'
+          ? maybeStatus
+          : error.message === 'Unable to detect CI source'
+            ? 400
+            : 500;
+
+      response.status(status).json({
         error: error.message
       });
     }

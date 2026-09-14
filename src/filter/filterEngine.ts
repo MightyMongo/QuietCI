@@ -110,6 +110,10 @@ export class FilterEngine {
       (timestamp) => timestamp >= windowStart
     );
 
+    if (timestamps.length === 0) {
+      this.rateLimits.delete(key);
+    }
+
     timestamps.push(now);
     this.rateLimits.set(key, timestamps);
 

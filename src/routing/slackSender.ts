@@ -2,11 +2,18 @@ import { UnifiedEvent } from '../types/events';
 import { DeliveryRecord, NotificationSender, TargetConfig } from './types';
 
 function sanitizeSlackText(value: string): string {
-  return value.replace(/[<>&]/g, (char) => {
+  return value.replace(/[<>]/g, (char) => {
     if (char === '<') return '&lt;';
-    if (char === '>') return '&gt;';
-    return '&amp;';
+    return '&gt;';
   });
+}
+
+function isHttpsUrl(value: string): boolean {
+  try {
+    return new URL(value).protocol === 'https:';
+  } catch {
+    return false;
+  }
 }
 
 export class SlackSender implements NotificationSender {
@@ -21,6 +28,14 @@ export class SlackSender implements NotificationSender {
         channel: 'slack',
         status: 'skipped',
         details: 'SLACK_WEBHOOK_URL is not configured'
+      };
+    }
+    if (!isHttpsUrl(target.resolvedWebhookUrl)) {
+      return {
+        targetName,
+        channel: 'slack',
+        status: 'failed',
+        details: 'Slack webhook URL must use HTTPS'
       };
     }
 
