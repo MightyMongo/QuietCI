@@ -1,0 +1,25 @@
+{
+  "eventType": "build.complete",
+  "createdDate": "2026-09-14T12:20:00Z",
+  "message": {
+    "text": "Azure pipeline failed"
+  },
+  "createdBy": {
+    "displayName": "azure-user"
+  },
+  "resource": {
+    "id": 12,
+    "result": "failed",
+    "sourceBranch": "refs/heads/main",
+    "url": "https://dev.azure.com/mighty/quietci/_build/results?buildId=12",
+    "definition": {
+      "name": "quietci"
+    },
+    "repository": {
+      "fullName": "MightyMongo/QuietCI"
+    },
+    "requestedFor": {
+      "uniqueName": "azure-user@example.com"
+    }
+  }
+}

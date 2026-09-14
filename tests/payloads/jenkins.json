@@ -1,0 +1,16 @@
+{
+  "name": "quietci-build",
+  "branch_name": "main",
+  "triggered_by": "jenkins-user",
+  "message": "Jenkins build failed",
+  "build": {
+    "number": 42,
+    "status": "FAILED",
+    "timestamp": "2026-09-14T12:10:00Z",
+    "full_url": "https://jenkins.example.com/job/quietci/42"
+  },
+  "job": {
+    "name": "quietci",
+    "full_name": "quietci/main"
+  }
+}

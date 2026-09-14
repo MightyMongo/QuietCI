@@ -1,0 +1,40 @@
+{
+  "name": "quietci",
+  "version": "1.0.0",
+  "description": "QuietCI is a self-hosted CI/CD notification optimizer. It reduces noisy build and deployment alerts by filtering irrelevant events, prioritizing critical signals, and routing clean notifications to Slack, Microsoft Teams, or email. QuietCI unifies GitHub Actions, GitLab CI/CD, Jenkins, CircleCI, and Azure DevOps into a single configurable workflow.",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.json && mkdir -p dist/migrations && cp migrations/*.sql dist/migrations/",
+    "db:setup": "tsx src/scripts/setupDb.ts",
+    "dev": "tsx watch src/index.ts",
+    "format": "prettier --check .",
+    "lint": "eslint . --ext .ts",
+    "start": "node dist/index.js",
+    "test": "tsx --test tests/**/*.test.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://localhost:26831/MightyMongo/QuietCI"
+  },
+  "keywords": [],
+  "author": "",
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "express": "^5.2.1",
+    "yaml": "^2.9.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.5.0",
+    "@typescript-eslint/eslint-plugin": "^8.43.0",
+    "@typescript-eslint/parser": "^8.43.0",
+    "eslint": "^9.35.0",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.6.2",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2"
+  }
+}
