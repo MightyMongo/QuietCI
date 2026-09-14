@@ -53,7 +53,7 @@ test('supports snoozing matched bot traffic', () => {
   assert.ok(decision.snoozeUntil);
 });
 
-test('marks repeated routed events as rate limited without changing the action', () => {
+test('suppresses repeated routed events with summary-only decisions', () => {
   const rules: RuleConfig[] = [
     {
       name: 'summary-limit',
@@ -72,7 +72,7 @@ test('marks repeated routed events as rate limited without changing the action',
   const second = engine.evaluate(baseEvent);
 
   assert.equal(first.rateLimited, false);
-  assert.equal(second.action, 'ROUTE');
+  assert.equal(second.action, 'SUMMARY_ONLY');
   assert.equal(second.rateLimited, true);
   assert.equal(second.summaryRequested, true);
 });

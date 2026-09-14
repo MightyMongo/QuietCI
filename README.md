@@ -89,6 +89,10 @@ QuietCI detects the source from headers or payload shape, normalizes the event, 
 
 ## Run Locally
 
+QuietCI requires Node.js `22.5+`. The provided `npm run db:setup`, `npm run dev`,
+and `npm start` scripts enable the required experimental SQLite runtime flag for
+you.
+
 ```bash
 npm install
 # ensure config/rules.yaml and config/targets.yaml exist

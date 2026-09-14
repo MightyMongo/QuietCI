@@ -22,7 +22,10 @@ export class FilterEngine {
         event,
         rule.action.rate_limit
       );
-      const action = rule.action.type;
+      const action =
+        rateLimited && rule.action.type === 'ROUTE'
+          ? 'SUMMARY_ONLY'
+          : rule.action.type;
       const snoozeUntil =
         action === 'SNOOZE' && rule.action.snooze_minutes
           ? new Date(
