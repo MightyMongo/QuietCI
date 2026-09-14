@@ -1,0 +1,40 @@
+{
+  "name": "quietci",
+  "version": "1.0.0",
+  "description": "QuietCI is a self-hosted CI/CD notification optimizer. It reduces noisy build and deployment alerts by filtering irrelevant events, prioritizing critical signals, and routing clean notifications to Slack, Microsoft Teams, or email. QuietCI unifies GitHub Actions, GitLab CI/CD, Jenkins, CircleCI, and Azure DevOps into a single configurable workflow.",
+  "main": "dist/src/index.js",
+  "scripts": {
+    "build": "node -e \"const fs=require('node:fs'); fs.rmSync('dist',{recursive:true,force:true});\" && tsc -p tsconfig.json && node -e \"const fs=require('node:fs'); fs.mkdirSync('dist/migrations',{recursive:true}); for (const file of fs.readdirSync('migrations')) { if (file.endsWith('.sql')) fs.cpSync('migrations/' + file, 'dist/migrations/' + file); }\"",
+    "db:setup": "node --experimental-sqlite ./node_modules/tsx/dist/cli.mjs src/scripts/setupDb.ts",
+    "dev": "node --experimental-sqlite ./node_modules/tsx/dist/cli.mjs watch src/index.ts",
+    "format": "prettier --check .",
+    "lint": "eslint . --ext .ts",
+    "start": "node --experimental-sqlite dist/src/index.js",
+    "test": "tsx --test tests/**/*.test.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://localhost:26831/MightyMongo/QuietCI"
+  },
+  "keywords": [],
+  "author": "",
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "express": "^5.2.1",
+    "yaml": "^2.9.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.5.0",
+    "@typescript-eslint/eslint-plugin": "^8.43.0",
+    "@typescript-eslint/parser": "^8.43.0",
+    "eslint": "^9.35.0",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.6.2",
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2"
+  }
+}

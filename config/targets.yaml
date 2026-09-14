@@ -1,0 +1,19 @@
+defaultTargets:
+  - slack-default
+
+targets:
+  slack-default:
+    channel: slack
+    webhookUrlEnv: SLACK_WEBHOOK_URL
+  teams-default:
+    channel: teams
+    webhookUrlEnv: TEAMS_WEBHOOK_URL
+  email-default:
+    channel: email
+    from: quietci@example.com
+    to:
+      - engineering@example.com
+    smtpHostEnv: SMTP_HOST
+    smtpPortEnv: SMTP_PORT
+    smtpUserEnv: SMTP_USER
+    smtpPassEnv: SMTP_PASS

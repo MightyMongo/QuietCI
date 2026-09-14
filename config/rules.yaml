@@ -1,0 +1,33 @@
+rules:
+  - name: ignore-docs-success
+    conditions:
+      repo: docs
+      message_regex: success|passed
+    action:
+      type: IGNORE
+      severity: low
+  - name: route-failures
+    conditions:
+      message_regex: fail|error|cancel
+    action:
+      type: ROUTE
+      targets:
+        - slack-default
+        - teams-default
+      severity: critical
+  - name: snooze-bot-traffic
+    conditions:
+      actor: 'dependabot[bot]'
+    action:
+      type: SNOOZE
+      snooze_minutes: 30
+      severity: low
+  - name: default-summary
+    conditions: {}
+    action:
+      type: SUMMARY_ONLY
+      severity: medium
+      summary: true
+      rate_limit:
+        count: 5
+        window_seconds: 300

@@ -1,0 +1,18 @@
+{
+  "type": "job-completed",
+  "message": "CircleCI workflow failed",
+  "created_at": "2026-09-14T12:15:00Z",
+  "project": {
+    "slug": "gh/MightyMongo/QuietCI"
+  },
+  "pipeline": {
+    "vcs": {
+      "branch": "main",
+      "repository_url": "https://github.com/MightyMongo/QuietCI"
+    }
+  },
+  "actor": {
+    "login": "circle-user"
+  },
+  "web_url": "https://app.circleci.com/pipelines/github/MightyMongo/QuietCI/1"
+}

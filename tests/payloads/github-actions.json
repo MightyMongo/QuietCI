@@ -1,0 +1,17 @@
+{
+  "action": "completed",
+  "workflow_run": {
+    "name": "CI",
+    "display_title": "CI pipeline failed",
+    "head_branch": "main",
+    "updated_at": "2026-09-14T12:00:00Z",
+    "conclusion": "failure",
+    "html_url": "https://github.com/MightyMongo/QuietCI/actions/runs/1"
+  },
+  "repository": {
+    "full_name": "MightyMongo/QuietCI"
+  },
+  "sender": {
+    "login": "octocat"
+  }
+}
