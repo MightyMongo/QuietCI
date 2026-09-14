@@ -8,6 +8,7 @@ import { FilterEngine } from './filter/filterEngine';
 import { normalizeWebhookEvent } from './normalizers';
 import { AuditStore } from './persistence/auditStore';
 import { NotificationRouter } from './routing/router';
+import { DeliveryRecord } from './routing/types';
 import { createSummarizerAdapter } from './summarizer/summarizerAdapter';
 export function createApp() {
   const config = loadRuntimeConfig();
@@ -38,10 +39,25 @@ export function createApp() {
       const eventId = auditStore.recordEvent(normalizedEvent);
       auditStore.recordDecision(eventId, decision);
 
-      const deliveries =
-        decision.action === 'ROUTE' && !decision.rateLimited
-          ? await router.route(normalizedEvent, decision.targets)
-          : [];
+      let deliveries: DeliveryRecord[] = [];
+
+      if (decision.action === 'ROUTE' && !decision.rateLimited) {
+        try {
+          deliveries = await router.route(normalizedEvent, decision.targets);
+        } catch (error) {
+          deliveries = [
+            {
+              targetName: 'router',
+              channel: 'unknown',
+              status: 'failed',
+              details:
+                error instanceof Error
+                  ? error.message
+                  : 'Unknown routing failure'
+            }
+          ];
+        }
+      }
 
       if (deliveries.length > 0) {
         auditStore.recordDeliveries(eventId, deliveries);
